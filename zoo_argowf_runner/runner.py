@@ -5,26 +5,18 @@ from loguru import logger
 import os
 from typing import Union
 from zoo_argowf_runner.handlers import ExecutionHandler
-from zoo_argowf_runner.argo_api import Execution
+# from zoo_argowf_runner.argo_api import Execution
 from zoo_argowf_runner.zoo_helpers import ZooConf, ZooInputs, ZooOutputs, CWLWorkflow
 from zoo_argowf_runner.volume import VolumeTemplates
 
-try:
-    import zoo
-except ImportError:
+import sys
 
-    class ZooStub(object):
-        def __init__(self):
-            self.SERVICE_SUCCEEDED = 3
-            self.SERVICE_FAILED = 4
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../zoo-runner-common')))
 
-        def update_status(self, conf, progress):
-            print(f"Status {progress}")
+from zoostub import ZooStub
+zoo = ZooStub()
 
-        def _(self, message):
-            print(f"invoked _ with {message}")
-
-    zoo = ZooStub()
+from base_runner import BaseRunner
 
 
 class ZooArgoWorkflowsRunner:
